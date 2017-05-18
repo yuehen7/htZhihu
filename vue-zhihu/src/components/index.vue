@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div>
     <div class="index-main">
       <div class="index-main-body">
         <div class="index-header">
@@ -68,7 +68,7 @@
 import auth from '../service/auth'
 import { Alert } from 'uiv'
 export default {
-  data: function (params) {
+  data: function () {
     return {
       tabIndex: 0,
       user: {
@@ -76,8 +76,8 @@ export default {
         password: '',
         email: ''
       },
-      showMsg: true,
-      msg: '用户注册成功，请前往您的邮箱进行验证~'
+      showMsg: false,
+      msg: ''
     }
   },
   components: {
