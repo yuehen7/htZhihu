@@ -12,12 +12,12 @@ export default {
 
 <style>
 @import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
-/*#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}*/
+#app {
+  color: #555;
+  font-size: 15px;
+  line-height: 1.7;
+  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
+  background: #f7fafc;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
 </style>

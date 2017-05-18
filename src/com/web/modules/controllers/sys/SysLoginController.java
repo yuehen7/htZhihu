@@ -8,6 +8,8 @@ import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
+import org.nutz.mvc.adaptor.JsonAdaptor;
+import org.nutz.mvc.annotation.AdaptBy;
 import org.nutz.mvc.annotation.At;
 import org.nutz.mvc.annotation.Encoding;
 import org.nutz.mvc.annotation.Fail;
@@ -16,7 +18,6 @@ import org.nutz.mvc.annotation.POST;
 import org.nutz.mvc.annotation.Param;
 
 import com.web.common.base.BaseController;
-import com.web.common.base.Model;
 import com.web.modules.bean.Sys_user;
 import com.web.modules.services.sys.SysUserService;
 
@@ -25,6 +26,7 @@ import com.web.modules.services.sys.SysUserService;
 @At("/platform/login") // 整个模块的路径前缀
 @Ok("json:{locked:'password|createAt',ignoreNull:true}") // 忽略password和createAt属性,忽略空属性的json输出
 @Fail("http:500") // 抛出异常的话,就走500页面
+@AdaptBy(type=JsonAdaptor.class)
 public class SysLoginController extends BaseController{
 	private static final Log log = Logs.get();
 	@Inject

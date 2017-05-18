@@ -3,15 +3,52 @@
     <div class="index-main">
       <div class="index-main-body">
         <div class="index-header">
-          <h1>知乎</h1>
+          <h1 class="title">知乎</h1>
           <h2 class="subtitle">与世界分享你的知识、经验和见解</h2>
         </div>
-        <div class="index-tab-navs">
-          <div class="navs-slider">
-            <a class="active">注册</a>
-            <a>登录</a>
-            <span class="navs-slider-bar"></span>
-            <span class="navs-slider-bar"></span>
+        <div class="desk-front sign-flow clearfix sign-flow-simple">
+          <div class="index-tab-navs">
+            <div class="navs-slider" v-bind:data-active-index="tabIndex">
+              <a href="#" v-bind:class="{ active: tabIndex ===0?true:false }" @click="select(0)">登陆</a>
+              <a href="#" v-bind:class="{ active: tabIndex ===1?true:false }" @click="select(1)">注册</a>
+              <span class="navs-slider-bar"></span>
+            </div>
+          </div>
+          <div class="view" v-if="tabIndex ===0">
+            <form @submit.prevent="signin">
+              <div class="group-inputs">
+                <div class="input-wrapper">
+                  <input type="email" id="email" name="email" class="form-control" placeholder="邮箱地址" required autofocus v-model="user.email">
+                </div>
+                <div class="input-wrapper">
+                  <input type="password" id="password" name="password" class="form-control" placeholder="密码" required v-model="user.password">
+                </div>
+              </div>
+              <div class="button-wrapper">
+                <button class="" type="submit" id="login_button">登陆</button>
+              </div>
+            </form>
+          </div>
+          <div class="view" v-else>
+            <form @submit.prevent="signup">
+              <div class="group-inputs">
+                <div class="input-wrapper">
+                  <input type="email" id="email" name="email" class="form-control" placeholder="邮箱地址" required autofocus v-model="user.email">
+                </div>
+                <div class="input-wrapper">
+                  <input type="text" id="username" name="username" class="form-control" placeholder="用户名" required autofocus v-model="user.username">
+                </div>
+                <div class="input-wrapper">
+                  <input type="password" id="password" name="password" class="form-control" placeholder="密码" required v-model="user.password">
+                </div>
+                <div class="input-wrapper">
+                  <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" placeholder="确认密码" required>
+                </div>
+              </div>
+              <div class="button-wrapper">
+                <button class="" type="submit" id="login_button">注册</button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -21,12 +58,58 @@
       <span class="dot">·</span>
       <a href="/contact" class="footer-mobile-show">联系我们</a>
     </div>
+    <alert v-model="showErr" placement="top" duration="3000" type="danger" width="400px" dismissable>
+      <span class="icon-ok-circled alert-icon-float-left"></span>
+      <strong>Well Done!</strong>
+      <p>You successfully read this important alert message.</p>
+    </alert>
   </div>
 </template>
 
 <script>
-export default {
+import { alert } from 'vue-strap'
+import auth from '../service/auth'
 
+export default {
+  data: function (params) {
+    return {
+      tabIndex: 0,
+      user: {
+        username: '',
+        password: '',
+        email: ''
+      },
+      showErr: false,
+      errMsg: ''
+    }
+  },
+  components: {
+    alert
+  },
+  methods: {
+    select: function (val) {
+      this.tabIndex = val
+    },
+    signin: function () {
+      auth.login(this.user.email, this.user.password, (re) => {
+        if (re.ok) {
+          alert(re.msg)
+        } else {
+          alert(re.msg)
+        }
+      })
+    },
+    signup: function () {
+      var parm = JSON.stringify(this.user)
+      auth.signup(parm, (re) => {
+        if (re.ok) {
+          alert(re.msg)
+        } else {
+          alert(re.msg)
+        }
+      })
+    }
+  }
 }
 </script>
 
@@ -44,6 +127,7 @@ export default {
 
 .index-main-body {
   margin: auto;
+  margin-top: 80px;
   padding: 30px 0 102px;
   width: 300px;
 }
@@ -85,41 +169,12 @@ export default {
   text-align: center;
 }
 
-.index-header .logo {
-  margin: 0 auto;
-  width: 160px;
-  height: 74px;
-  background-size: contain;
+.index-header .title {
+  margin: 30px 0 20px;
+  font-weight: 400;
+  font-size: 55px;
+  line-height: 1;
 }
-
-@media (max-width :740px) {
-  .index-header .logo {
-    width: 96px;
-    height: 44.4px;
-  }
-}
-
-@media (-webkit-min-device-pixel-ratio:2),
-(min-resolution:2dppx),
-(min-resolution:192dpi) {}
-
-.index-header .logo.org-logo {
-  margin-top: 30px;
-  width: 178px;
-  height: 41px;
-}
-
-@media (max-width :740px) {
-  .index-header .logo.org-logo {
-    margin-top: 0;
-    width: 142.4px;
-    height: 32.8px;
-  }
-}
-
-@media (-webkit-min-device-pixel-ratio:2),
-(min-resolution:2dppx),
-(min-resolution:192dpi) {}
 
 .index-header .subtitle {
   margin: 30px 0 20px;
@@ -197,7 +252,7 @@ export default {
   width: 2.4em;
   height: 2px;
   background: #0f88eb;
-  -webkit-transition: lerft .15s ease-in;
+  -webkit-transition: left .15s ease-in;
   transition: left .15s ease-in;
 }
 
@@ -215,11 +270,91 @@ export default {
   transition: opacity .15s, color .15s;
 }
 
-
+.index-tab-navs a:hover {
+  opacity: 1;
+  -ms-filter: "alpha(Opacity=100)";
+  text-decoration: none;
+}
 
 .index-tab-navs a.active {
   opacity: 1;
   -ms-filter: "alpha(Opacity=100)";
   color: #0f88eb;
+  text-decoration: none;
+}
+
+.sign-flow {
+  text-align: center;
+}
+
+.sign-flow .view {
+  float: none;
+  margin: auto;
+  width: 300px;
+  text-align: left;
+}
+
+.sign-flow .view .group-inputs {
+  padding: 1px 0;
+  border: 1px solid #d5d5d5;
+  border-radius: 3px;
+}
+
+.sign-flow .view .input-wrapper {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+}
+
+.sign-flow .view .input-wrapper+.input-wrapper {
+  border-top: 1px solid #e8e8e8;
+}
+
+.sign-flow .view .input-wrapper input {
+  padding: 1em .8em;
+  width: 100%;
+  box-sizing: border-box;
+  height: 100%;
+}
+
+.sign-flow .view .input-wrapper input,
+.sign-flow .view .input-wrapper input:focus {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: #fff;
+}
+
+.sign-flow .view .input-wrapper input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 30px #fff inset;
+  -webkit-text-fill-color: #555;
+}
+
+.sign-flow a {
+  color: inherit;
+}
+
+.sign-flow .title {
+  display: none;
+}
+
+.sign-flow .view .button-wrapper {
+  margin-top: 18px;
+}
+
+.sign-flow .view .button-wrapper button {
+  display: block;
+  padding: 0;
+  width: 100%;
+  font-size: 15px;
+  background: #0f88eb;
+  box-shadow: none;
+  border: 0;
+  border-radius: 3px;
+  line-height: 41px;
+  color: #fff;
+  outline: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 </style>
