@@ -58,18 +58,15 @@
       <span class="dot">·</span>
       <a href="/contact" class="footer-mobile-show">联系我们</a>
     </div>
-    <alert v-model="showErr" placement="top" duration="3000" type="danger" width="400px" dismissable>
-      <span class="icon-ok-circled alert-icon-float-left"></span>
-      <strong>Well Done!</strong>
-      <p>You successfully read this important alert message.</p>
+    <alert type="warning" class="alertTop" :closable="true" :duration="3000" v-if="showMsg" @close="showMsg=false">
+      <p>{{msg}}</p>
     </alert>
   </div>
 </template>
 
 <script>
-import { alert } from 'vue-strap'
 import auth from '../service/auth'
-
+import { Alert } from 'uiv'
 export default {
   data: function (params) {
     return {
@@ -79,12 +76,12 @@ export default {
         password: '',
         email: ''
       },
-      showErr: false,
-      errMsg: ''
+      showMsg: true,
+      msg: '用户注册成功，请前往您的邮箱进行验证~'
     }
   },
   components: {
-    alert
+    'alert': Alert
   },
   methods: {
     select: function (val) {
@@ -95,7 +92,8 @@ export default {
         if (re.ok) {
           alert(re.msg)
         } else {
-          alert(re.msg)
+          this.showMsg = true
+          this.msg = re.msg
         }
       })
     },
@@ -103,9 +101,11 @@ export default {
       var parm = JSON.stringify(this.user)
       auth.signup(parm, (re) => {
         if (re.ok) {
-          alert(re.msg)
+          this.showMsg = true
+          this.msg = '用户注册成功，请前往您的邮箱进行验证~'
         } else {
-          alert(re.msg)
+          this.showMsg = true
+          this.msg = re.msg
         }
       })
     }
@@ -356,5 +356,16 @@ export default {
   outline: 0;
   cursor: pointer;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+
+.alertTop {
+    width: 350px;
+    position: fixed;
+    top: 50px;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    z-index: 1050;
 }
 </style>
